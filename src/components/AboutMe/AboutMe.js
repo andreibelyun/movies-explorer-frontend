@@ -10,7 +10,7 @@ const myAge = (thisDay.getMonth() >= birthday.getMonth() && thisDay.getDate() >=
 : thisDay.getFullYear() - birthday.getFullYear() - 1;
 
 
-function AboutMe() {
+export default function AboutMe() {
     return (
         <section className='about-me'>
             <h2 className='about-me__title'>Студент</h2>
@@ -26,15 +26,13 @@ function AboutMe() {
                         связать свою жизнь с веб-разработкой.
                     </p>
                     <ul className='about-me__links'>
-                        <li className='about-me__link'>Facebook</li>
-                        <li className='about-me__link'>Github</li>
+                        <li><a className='about-me__link interactive-link' href='https://www.facebook.com/andreibelyun' target='_blank' rel='noreferrer'>Facebook</a></li>
+                        <li><a className='about-me__link interactive-link' href='https://github.com/andreibelyun' target='_blank' rel='noreferrer'>Github</a></li>
                     </ul>
                 </div>
-                <img className='about-me__photo' src={photo} alt='Фотография студента'  />
+                <img className='about-me__photo' src={photo} alt='Фотография студента'/>
             </div>
             <Portfolio />
         </section>
     );
 }
-
-export default AboutMe;

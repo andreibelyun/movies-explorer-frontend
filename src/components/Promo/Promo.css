@@ -12,7 +12,7 @@
 .promo__title,
 .promo__subtitle,
 .promo__learn-more {
-    font-family: 'Inter';
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-style: normal;
     color: #FFFFFF;
     margin: 0;
@@ -54,10 +54,6 @@
     justify-content: center;
 }
 
-.promo__learn-more:hover {
-    cursor: pointer;
-}
-
 .promo__image {
     width: 310px;
     height: 304px;
@@ -84,13 +80,17 @@
         max-width: 100%;
         font-size: 40px;
         line-height: 50px;
-        margin-top: 48px;
+        margin-top: 49px;
         text-align: center;
+    }
+
+    .promo__title-break {
+        display: none;
     }
 
     .promo__subtitle {
         max-width: 260px;
-        margin-top: 22px;
+        margin-top: 21px;
         text-align: center;
     }
 
@@ -115,6 +115,10 @@
         line-height: 38px;
         letter-spacing: -0.04em;
         margin-top: 44px;
+    }
+
+    .promo__subtitle {
+        margin-top: 24px;
     }
 
     .promo__learn-more {

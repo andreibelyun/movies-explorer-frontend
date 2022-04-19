@@ -1,6 +1,6 @@
 import './AboutProject.css';
 
-function AboutProject() {
+export default function AboutProject() {
     return (
         <section className="about-project">
             <h2 className="about-project__title">О проекте</h2>
@@ -41,5 +41,3 @@ function AboutProject() {
         </section>
     );
 }
-
-export default AboutProject;

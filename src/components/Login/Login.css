@@ -1,0 +1,193 @@
+.form {
+    max-width: 396px;
+    margin: 0 auto;
+    padding: 70px 0;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-style: normal;
+}
+
+.form__logo {
+    width: 38px;
+    height: 38px;
+}
+
+.form__title {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+    color: #000000;
+    margin: 36px 0 34px;
+    padding: 0;
+}
+
+.form__content {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-style: normal;
+}
+
+.form__sections {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.form__section {
+    margin: 0;
+    padding: 0;
+    margin-top: 14px;
+}
+
+.form__section:first-of-type {
+    margin-top: 0;
+}
+
+.form__input-title {
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    color: #A0A0A0;
+    margin: 0;
+    padding: 0;
+}
+
+.form__input {
+    width: 100%;
+    height: 46px;
+    background-color: #F9F9F9;
+    border-radius: 8px;
+    border: none;
+    padding: 15px;
+    box-sizing: border-box;
+    margin: 0;
+    font-size: 13px;
+    line-height: 16px;
+    color: #000000;
+    margin-top: 8px;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-style: normal;
+}
+
+.form__input_type_name {
+    font-weight: 400;
+}
+
+.form__input_type_email {
+    font-weight: 500;
+}
+
+.form__input_type_password {
+    font-weight: 400;
+}
+
+.form__input_type_error {
+    color: #EE3465;
+}
+
+.form__input-error {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    color: #EE3465;
+    margin-top: 10px;
+}
+
+.form__enter {
+    width: 396px;
+    height: 45px;
+    background: #2BE080;
+    border-radius: 3px;
+    border: none;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #FFFFFF;
+    margin: 0 0 16px;
+    padding: 0;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-style: normal;
+}
+
+.form__footnote {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #A0A0A0;
+    margin: 0;
+    padding: 0;
+}
+
+.form__footnote-link {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #2BE080;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    margin-left: 6px;
+}
+
+.login__enter {
+    margin-top: 169px;
+}
+
+@media screen and (max-width: 768px) {
+    .form {
+        padding: 232px 0;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .form {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 56px 30px 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form__title {
+        width: 100%;
+        margin: 46px 0 74px;
+        text-align: center;
+    }
+
+    .form__content {
+        width: 100%;
+    }
+
+    .form__input-error {
+        margin-top: 10px;
+    }
+
+    .form__enter {
+        width: 100%;
+        font-size: 12px;
+        line-height: 15px;
+        margin-bottom: 14px;
+        margin-top: 169px;
+    }
+
+    .form__footnote {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .form__footnote-link {
+        font-size: 12px;
+        line-height: 15px;
+        margin-left: 7px;
+    }
+
+    .login__enter {
+        margin-top: 257px;
+    }
+}

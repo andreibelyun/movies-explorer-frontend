@@ -1,19 +1,19 @@
 @font-face {
   font-family: 'Inter';
-  font-style:  normal;
+  font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url("../../vendor/fonts/Inter-Regular.woff2") format("woff2"),
-       url("../../vendor/fonts/Inter-Regular.woff") format("woff");
+    url("../../vendor/fonts/Inter-Regular.woff") format("woff");
 }
 
 @font-face {
   font-family: 'Inter';
-  font-style:  normal;
+  font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url("../../vendor/fonts/Inter-Medium.woff2") format("woff2"),
-       url("../../vendor/fonts/Inter-Medium.woff") format("woff");
+    url("../../vendor/fonts/Inter-Medium.woff") format("woff");
 }
 
 body {
@@ -24,43 +24,23 @@ body {
 .app {
   max-width: 1280px;
   margin: 0 auto;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
 }
 
-/* .App {
-  text-align: center;
+.interactive-link {
+  cursor: pointer;
+  text-decoration: none;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.interactive-link:hover {
+  opacity: .5;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.interactive-button {
+  cursor: pointer;
+  text-decoration: none;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.interactive-button:hover {
+  transform: scale(1.05);
 }
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
