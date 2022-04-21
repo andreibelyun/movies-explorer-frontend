@@ -96,9 +96,10 @@
     }
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 500px) {
     .techs {
         padding: 70px 18px 0;
+        background-color: #FFFFFF;
     }
 
     .techs__title {
