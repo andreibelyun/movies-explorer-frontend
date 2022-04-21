@@ -1,0 +1,133 @@
+.promo {
+    margin: 0;
+    padding: 0 70px;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 524px;
+    background-color: #5C5C5C;
+    display: flex;
+    justify-content: space-between;
+}
+
+.promo__title,
+.promo__subtitle,
+.promo__learn-more {
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-style: normal;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+.promo__title {
+    font-weight: 400;
+    font-size: 50px;
+    line-height: 58px;
+    max-width: 640px;
+    margin-top: 75px;
+}
+
+.promo__subtitle {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    mix-blend-mode: normal;
+    opacity: 0.5;
+    max-width: 340px;
+    margin-top: 36px;
+}
+
+.promo__learn-more {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    width: 129px;
+    height: 36px;
+    margin-top: 146px;
+    margin-bottom: 75px;
+    background: none;
+    border: 1px solid rgba(255, 255, 255, .6);
+    box-sizing: border-box;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.promo__image {
+    width: 310px;
+    height: 304px;
+    margin: 0;
+    padding: 0;
+    margin-top: 75px;
+}
+
+@media screen and (max-width: 900px) {
+    .promo {
+        padding: 0 44px;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    .promo__main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+    }
+
+    .promo__title {
+        max-width: 100%;
+        font-size: 40px;
+        line-height: 50px;
+        margin-top: 49px;
+        text-align: center;
+    }
+
+    .promo__title-break {
+        display: none;
+    }
+
+    .promo__subtitle {
+        max-width: 260px;
+        margin-top: 21px;
+        text-align: center;
+    }
+
+    .promo__learn-more {
+        margin: 92px 0 76px;
+    }
+
+    .promo__image {
+        margin-top: 140px;
+    }
+
+}
+
+@media screen and (max-width: 400px) {
+    .promo {
+        padding: 0;
+    }
+
+    .promo__title {
+        max-width: 300px;
+        font-size: 30px;
+        line-height: 38px;
+        letter-spacing: -0.04em;
+        margin-top: 44px;
+    }
+
+    .promo__subtitle {
+        margin-top: 24px;
+    }
+
+    .promo__learn-more {
+        margin: 80px 0 30px;
+    }
+
+    .promo__image {
+        margin-top: 70px;
+        width: 210px;
+        height: 206px;
+    }
+}

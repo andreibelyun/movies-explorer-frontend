@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../vendor/fonts/Inter-Regular.woff2") format("woff2"),
+    url("../../vendor/fonts/Inter-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../../vendor/fonts/Inter-Medium.woff2") format("woff2"),
+    url("../../vendor/fonts/Inter-Medium.woff") format("woff");
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+}
+
+.interactive-link {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.interactive-link:hover {
+  opacity: .5;
+}
+
+.interactive-button {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.interactive-button:hover {
+  transform: scale(1.05);
+}
