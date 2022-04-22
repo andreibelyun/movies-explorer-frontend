@@ -20,7 +20,28 @@ class MainApi {
                 name, email, password
             })
         })
-        .then(this._checkResponse);
+            .then(this._checkResponse);
+    }
+
+    login(email, password) {
+        return fetch(`${this._baseUrl}/signin`, {
+            method: 'POST',
+            headers: this._headers,
+            body: JSON.stringify({
+                email, password
+            })
+        })
+            .then(this._checkResponse);
+    }
+
+    checkToken(jwt) {
+        return fetch(`${this._baseUrl}/users/me`, {
+            headers: { 
+                ...this._headers,
+                'Authorization': `Bearer ${jwt}`
+            },
+        })
+            .then(this._checkResponse);
     }
 
 
