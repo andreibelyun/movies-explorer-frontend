@@ -1,12 +1,22 @@
+import React from 'react';
+
 import './Header.css';
 import logo from '../../images/logo.png';
 import { Routes, Route, Link } from 'react-router-dom';
 import Navigation from '../Navigation/Navigation';
 
-const needWhiteHeaderEndpoints = ['/movies', '/saved-movies', '/profile'];
+import CurrentUserContext from '../../contexts/CurrentUserContext';
+
 
 export default function Header() {
+    
+    const needWhiteHeaderEndpoints = ['/movies', '/saved-movies', '/profile'];
+
+    const currentUser = React.useContext(CurrentUserContext);
+
     return (
+
+        
         <Routes>
             <Route path='/' element={
                 <header className='header'>
