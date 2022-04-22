@@ -36,10 +36,70 @@ class MainApi {
 
     checkToken(jwt) {
         return fetch(`${this._baseUrl}/users/me`, {
-            headers: { 
+            headers: {
                 ...this._headers,
                 'Authorization': `Bearer ${jwt}`
             },
+        })
+            .then(this._checkResponse);
+    }
+
+    updateUserInfo(name, email) {
+        return fetch(`${this._baseUrl}/users/me`, {
+            method: 'PATCH',
+            headers: this._headers,
+            body: JSON.stringify({
+                name, email
+            })
+        })
+            .then(this._checkResponse);
+    }
+
+    getSavedMovies() {
+        return fetch(`${this._baseUrl}/movies`, {
+            headers: this._headers
+        })
+            .then(this._checkResponse);
+    }
+
+    saveMovie(movie) {
+        const {
+            country,
+            director,
+            duration,
+            year,
+            description,
+            image,
+            trailer,
+            nameRU,
+            nameEN,
+            thumbnail,
+            movieId } = movie;
+
+        return fetch(`${this._baseUrl}/movies`, {
+            method: 'POST',
+            headers: this._headers,
+            body: JSON.stringify({
+                country,
+                director,
+                duration,
+                year,
+                description,
+                image,
+                trailer,
+                nameRU,
+                nameEN,
+                thumbnail,
+                movieId
+            })
+        })
+            .then(this._checkResponse);
+    }
+
+    deleteMovieFromSaved(movieId) {
+        return fetch(`${this._baseUrl}/movies/${movieId}`, {
+            method: 'DELETE',
+            headers: this._headers
         })
             .then(this._checkResponse);
     }
