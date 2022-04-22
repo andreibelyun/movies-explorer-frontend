@@ -26,6 +26,8 @@ export default function App() {
 
   const navigate = useNavigate();
 
+  // регистрация/авторизация/проверка токена
+
   const onRegister = ({ name, email, password }) => {
     MainApi.register(name, email, password)
       .then(() => {
@@ -66,14 +68,16 @@ export default function App() {
 
       MainApi.checkToken(jwt)
         .then((data) => {
+          console.log(currentUser);
           // Обновляем информацию о пользователе
           setCurrentUser({
             name: data.name,
             email: data.email,
             loggedIn: true,
           });
+          console.log(currentUser);
           // Добавляем авторизационные заголовки
-          MainApi._headers['Authorization'] = `Bearer ${data.token}`;
+          MainApi._headers['Authorization'] = `Bearer ${jwt}`;
         })
         .catch(() => {
           // Обрабатываем ошибку
@@ -82,9 +86,42 @@ export default function App() {
     }
   };
 
+  // редактирование профиля и выход
+
+  const onEditProfile = ({ name, email }) => {
+
+    // запрос в базу на обновление информации
+    MainApi.updateUserInfo(name, email)
+      .then(() => {
+        // изменяем информацию о пользователе
+        setCurrentUser({
+          name,
+          email,
+          loggedIn: true,
+        });
+      })
+      .catch(() => {
+        // Обрабатываем ошибку
+        console.log('Ошибка при обновлении профиля');
+      });
+  };
+
+  const onSignout = () => {
+
+    localStorage.removeItem('jwt');
+
+    setCurrentUser({
+      name: '',
+      email: '',
+      loggedIn: false,
+    });
+    // удаляем авторизационные заголовки
+    MainApi._headers['Authorization'] = '';
+  };
+
   React.useEffect(() => {
     handleTokenCheck();
-  }, [])
+  }, []);
 
   return (
     <div className="app">
@@ -96,7 +133,7 @@ export default function App() {
           <Route path='/signin' element={<Login onLogin={onLogin} />} />
           <Route path='/movies' element={<PrivateRoute> <Movies /></PrivateRoute>} />
           <Route path='/saved-movies' element={<PrivateRoute> <SavedMovies /></PrivateRoute>} />
-          <Route path='/profile' element={<PrivateRoute> <Profile /></PrivateRoute>} />
+          <Route path='/profile' element={<PrivateRoute> <Profile onEdit={onEditProfile} onSignout={onSignout} /></PrivateRoute>} />
           <Route path='*' element={<PrivateRoute> <NotFound /></PrivateRoute>} />
         </Routes>
         <Footer />
