@@ -34,7 +34,7 @@ class MainApi {
             .then(this._checkResponse);
     }
 
-    checkToken(jwt) {
+    getUserInfo(jwt) {
         return fetch(`${this._baseUrl}/users/me`, {
             headers: {
                 ...this._headers,

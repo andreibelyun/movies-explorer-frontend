@@ -21,8 +21,9 @@ export default function App() {
   const [currentUser, setCurrentUser] = React.useState({
     name: '',
     email: '',
-    loggedIn: false,
   });
+
+  const [loggedIn, setLoggedIn] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -46,11 +47,14 @@ export default function App() {
         // Добавляем токен в localStorage
         localStorage.setItem('jwt', data.token);
         // Обновляем информацию о пользователе
-        setCurrentUser({
-          name: data.name,
-          email: data.email,
-          loggedIn: true,
-        });
+        MainApi.getUserInfo(data.token)
+          .then((data) => {
+            setCurrentUser({
+              name: data.name,
+              email: data.email,
+            });
+          })
+        setLoggedIn(true);
         // Добавляем авторизационные заголовки
         MainApi._headers['Authorization'] = `Bearer ${data.token}`;
         // Перенаправляем на страницу с фильмами
@@ -63,27 +67,22 @@ export default function App() {
   };
 
   const handleTokenCheck = () => {
-    if (localStorage.getItem('jwt')) {
-      const jwt = localStorage.getItem('jwt');
-
-      MainApi.checkToken(jwt)
-        .then((data) => {
-          console.log(currentUser);
-          // Обновляем информацию о пользователе
-          setCurrentUser({
-            name: data.name,
-            email: data.email,
-            loggedIn: true,
-          });
-          console.log(currentUser);
-          // Добавляем авторизационные заголовки
-          MainApi._headers['Authorization'] = `Bearer ${jwt}`;
-        })
-        .catch(() => {
-          // Обрабатываем ошибку
-          console.log('Ошибка при проверке токена');
+    const jwt = localStorage.getItem('jwt');
+    MainApi.getUserInfo(jwt)
+      .then((data) => {
+        // Обновляем информацию о пользователе
+        setCurrentUser({
+          name: data.name,
+          email: data.email,
         });
-    }
+        setLoggedIn(true);
+        // Добавляем авторизационные заголовки
+        MainApi._headers['Authorization'] = `Bearer ${jwt}`;
+      })
+      .catch(() => {
+        // Обрабатываем ошибку
+        console.log('Ошибка при проверке токена');
+      });
   };
 
   // редактирование профиля и выход
@@ -97,7 +96,6 @@ export default function App() {
         setCurrentUser({
           name,
           email,
-          loggedIn: true,
         });
       })
       .catch(() => {
@@ -113,8 +111,8 @@ export default function App() {
     setCurrentUser({
       name: '',
       email: '',
-      loggedIn: false,
     });
+    setLoggedIn(false);
     // удаляем авторизационные заголовки
     MainApi._headers['Authorization'] = '';
   };
@@ -126,15 +124,15 @@ export default function App() {
   return (
     <div className="app">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
+        <Header loggedIn={loggedIn} />
         <Routes>
           <Route path='/' element={<Main />} />
           <Route path='/signup' element={<Register onRegister={onRegister} />} />
           <Route path='/signin' element={<Login onLogin={onLogin} />} />
-          <Route path='/movies' element={<PrivateRoute> <Movies /></PrivateRoute>} />
-          <Route path='/saved-movies' element={<PrivateRoute> <SavedMovies /></PrivateRoute>} />
-          <Route path='/profile' element={<PrivateRoute> <Profile onEdit={onEditProfile} onSignout={onSignout} /></PrivateRoute>} />
-          <Route path='*' element={<PrivateRoute> <NotFound /></PrivateRoute>} />
+          <Route path='/movies' element={<PrivateRoute loggedIn={loggedIn}> <Movies /></PrivateRoute>} />
+          <Route path='/saved-movies' element={<PrivateRoute loggedIn={loggedIn}> <SavedMovies /></PrivateRoute>} />
+          <Route path='/profile' element={<PrivateRoute loggedIn={loggedIn}> <Profile onEdit={onEditProfile} onSignout={onSignout} /></PrivateRoute>} />
+          <Route path='*' element={<PrivateRoute loggedIn={loggedIn}> <NotFound /></PrivateRoute>} />
         </Routes>
         <Footer />
       </CurrentUserContext.Provider>

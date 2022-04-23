@@ -6,7 +6,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 
-export default function Navigation() {
+export default function Navigation({ loggedIn }) {
 
     const currentUser = React.useContext(CurrentUserContext);
 
@@ -16,7 +16,7 @@ export default function Navigation() {
     const menuClass = location.pathname === '/' ? 'menu menu_black' : 'menu';
 
     return (
-        currentUser.loggedIn
+        loggedIn
             ? (
                 <nav className={`navbar ${menuClass}`}>
                     <input className='menu__switch' id='menu__switch' type='checkbox' />

@@ -3,9 +3,9 @@ import { Navigate } from "react-router-dom";
 
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 
-export default function PrivateRoute({ children }) {
+export default function PrivateRoute({ children, loggedIn }) {
 
     const currentUser = React.useContext(CurrentUserContext);
 
-    return (currentUser.loggedIn ? children : <Navigate to='/signin' />);
+    return (loggedIn ? children : <Navigate to='/signin' />);
 };

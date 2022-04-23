@@ -3,7 +3,7 @@ import logo from '../../images/logo.png';
 import { Link, useLocation } from 'react-router-dom';
 import Navigation from '../Navigation/Navigation';
 
-export default function Header() {
+export default function Header({ loggedIn }) {
 
     const currentPath = useLocation().pathname;
     const headerClass = currentPath === '/' ? 'header header_black' : 'header';
@@ -15,7 +15,7 @@ export default function Header() {
             <Link to='/'>
                 <img className='header__logo interactive-button' alt='Логотип' src={logo} />
             </Link>
-            <Navigation />
+            <Navigation loggedIn={loggedIn}/>
         </header>
     );
 }
