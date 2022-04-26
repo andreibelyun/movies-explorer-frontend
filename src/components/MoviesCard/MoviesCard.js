@@ -4,6 +4,7 @@ import activeButtonImg from '../../images/save_movie_button_icon.svg';
 import removeButtonImg from '../../images/remove-from-saved-icon.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MainApi from '../../utils/MainApi';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 export default function MoviesCard(props) {
 
@@ -23,6 +24,7 @@ export default function MoviesCard(props) {
 
     const location = useLocation().pathname;
     const navigate = useNavigate();
+    const currentUser = React.useContext(CurrentUserContext);
 
     // изменяет склонение слова "минут" в зависимости от длительности
     const getDurationText = (duration) => {
@@ -45,7 +47,9 @@ export default function MoviesCard(props) {
     // Устанавливаем карточке статус
     MainApi.getSavedMovies()
         .then((moviesList) => {
-            const isSaved = moviesList.find(item => item.movieId === movieId);
+            const isSaved = moviesList
+                .filter(item => (item.owner === currentUser.id))
+                .find(item => item.movieId === movieId);
             if (location === '/movies' && isSaved) {
                 setMovieStatus('just-saved');
             }
