@@ -15,8 +15,8 @@ export default function SavedMovies({ renderOptions }) {
     React.useEffect(() => {
         MainApi.getSavedMovies()
             .then((moviesList) => {
+                // сортировать по (owner = id пользователя)
                 setSavedMoviesList(moviesList.reverse());
-                console.log(moviesList)
             })
             .catch();
     }, [location]);
@@ -25,7 +25,9 @@ export default function SavedMovies({ renderOptions }) {
     return (
         <section className='movies'>
             <SearchForm />
-            <MoviesCardList movies={savedMoviesList} renderOptions={renderOptions}/>
+            <MoviesCardList
+                movies={savedMoviesList}
+                renderOptions={renderOptions} />
             <Preloader />
         </section>
     );

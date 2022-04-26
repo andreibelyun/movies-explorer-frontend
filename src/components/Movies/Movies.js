@@ -16,16 +16,18 @@ export default function Movies({ renderOptions }) {
 
     const handleSearchQuery = (keyWord, isShortFilm) => {
         setSearchOptions({ keyWord, isShortFilm });
+        localStorage.setItem('searchOptions', searchOptions);
     };
 
-    const [isVisible, setIsVisible] = React.useState(false);
+    // Статус отображение прелоудера
+    const [isPreloaderVisible, setIsPreloaderVisible] = React.useState(false);
 
     // componentDidMount
     // Добавлена задержка для демонстрации работы прелоудера
     React.useEffect(() => {
         setSearchOptions(localStorage.getItem('searchOptions'));
         setMoviesList([]);
-        setIsVisible(true)
+        setIsPreloaderVisible(true)
         setTimeout(() => {
             MoviesApi.getAllMovies()
             .then((movies) => {
@@ -35,7 +37,7 @@ export default function Movies({ renderOptions }) {
                 console.log('Ошибка при получении всех фильмов');
             })
             .finally(() => {
-                setIsVisible(false);
+                setIsPreloaderVisible(false);
             })
         }, 1000);
     }, []);
@@ -45,7 +47,7 @@ export default function Movies({ renderOptions }) {
             <SearchForm
                 onSearch={handleSearchQuery}
             />
-            <Preloader isVisible={isVisible}/>
+            <Preloader isVisible={isPreloaderVisible}/>
             <MoviesCardList
                 movies={moviesList}
                 searchOptions={searchOptions}
