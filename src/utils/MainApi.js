@@ -34,12 +34,19 @@ class MainApi {
             .then(this._checkResponse);
     }
 
-    getUserInfo(jwt) {
+    checkToken(jwt) {
         return fetch(`${this._baseUrl}/users/me`, {
             headers: {
                 ...this._headers,
                 'Authorization': `Bearer ${jwt}`
             },
+        })
+            .then(this._checkResponse);
+    }
+
+    getUserInfo() {
+        return fetch(`${this._baseUrl}/users/me`, {
+            headers: this._headers
         })
             .then(this._checkResponse);
     }
@@ -70,7 +77,7 @@ class MainApi {
             year,
             description,
             image,
-            trailer,
+            trailerLink,
             nameRU,
             nameEN,
             thumbnail,
@@ -86,7 +93,7 @@ class MainApi {
                 year,
                 description,
                 image,
-                trailer,
+                trailerLink,
                 nameRU,
                 nameEN,
                 thumbnail,
@@ -103,12 +110,11 @@ class MainApi {
         })
             .then(this._checkResponse);
     }
-
-
 }
 
 export default new MainApi({
-    baseUrl: 'https://api.saveme.nomoredomains.xyz',
+    // baseUrl: 'https://api.saveme.nomoredomains.xyz',
+    baseUrl: 'http://localhost:3001',
     headers: {
         'Content-Type': 'application/json',
     }

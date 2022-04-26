@@ -1,6 +1,7 @@
 .movie {
     margin: 0 auto;
     width: 100%;
+    max-width: 700px;
     font-family: 'Inter';
     font-style: normal;
     background-color: #FDFDFD;
@@ -27,6 +28,17 @@
     color: #000000;
     margin: 0;
     padding: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 70%;
+    max-height: 18px;
+}
+
+.movie__name:hover {
+    overflow: visible;
+    /* max-height: 37px; */
+    white-space:normal;
 }
 
 .movie__duration {

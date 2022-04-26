@@ -1,12 +1,10 @@
 import React from 'react';
-
 import './Navigation.css';
 import accountIcon from '../../images/account-icon.svg';
 import { NavLink, useLocation } from 'react-router-dom';
-
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 
-export default function Navigation({ loggedIn }) {
+export default function Navigation() {
 
     const currentUser = React.useContext(CurrentUserContext);
 
@@ -16,7 +14,7 @@ export default function Navigation({ loggedIn }) {
     const menuClass = location.pathname === '/' ? 'menu menu_black' : 'menu';
 
     return (
-        loggedIn
+        currentUser.loggedIn
             ? (
                 <nav className={`navbar ${menuClass}`}>
                     <input className='menu__switch' id='menu__switch' type='checkbox' />

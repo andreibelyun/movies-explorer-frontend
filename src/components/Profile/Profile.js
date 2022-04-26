@@ -27,9 +27,7 @@ export default function Profile({ onEdit, onSignout }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         onEdit(user);
-
         changeInputStatus();
     };
 
