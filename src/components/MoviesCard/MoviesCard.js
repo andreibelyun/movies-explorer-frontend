@@ -88,7 +88,7 @@ export default function MoviesCard(props) {
     const handleDeletion = () => {
         MainApi.getSavedMovies()
             .then((movies) => {
-                const id = movies.find((item) => (item.movieId === movieId))._id;
+                const id = movies.find((item) => (item.owner === currentUser.id && item.movieId === movieId))._id;
                 MainApi.deleteMovieFromSaved(id)
                     .then(() => {
                         setMovieStatus('not-saved');
