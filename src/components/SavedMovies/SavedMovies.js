@@ -3,10 +3,13 @@ import './SavedMovies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 import MainApi from '../../utils/MainApi';
 import { useLocation } from 'react-router-dom';
 
 export default function SavedMovies({ renderOptions }) {
+
+    const currentUser = React.useContext(CurrentUserContext);
 
     const [savedMoviesList, setSavedMoviesList] = React.useState([]);
 
@@ -16,7 +19,7 @@ export default function SavedMovies({ renderOptions }) {
         MainApi.getSavedMovies()
             .then((moviesList) => {
                 // сортировать по (owner = id пользователя)
-                setSavedMoviesList(moviesList.reverse());
+                setSavedMoviesList(moviesList.reverse().filter(item => (item.owner === currentUser.id)));
             })
             .catch();
     }, [location]);

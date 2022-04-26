@@ -25,7 +25,7 @@ export default function Movies({ renderOptions }) {
     // componentDidMount
     // Добавлена задержка для демонстрации работы прелоудера
     React.useEffect(() => {
-        setSearchOptions(localStorage.getItem('searchOptions'));
+        // Не показываем старый результат поиска
         setMoviesList([]);
         setIsPreloaderVisible(true)
         setTimeout(() => {
@@ -40,6 +40,13 @@ export default function Movies({ renderOptions }) {
                 setIsPreloaderVisible(false);
             })
         }, 1000);
+    }, []);
+
+    React.useEffect(() => {
+        const searchOptions = localStorage.getItem('searchOptions');
+        if(searchOptions?.keyWord) {
+            
+        }
     }, []);
 
     return (

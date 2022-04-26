@@ -19,7 +19,8 @@ export default function App() {
   const [currentUser, setCurrentUser] = React.useState({
     name: '',
     email: '',
-    loggedIn: false
+    loggedIn: false,
+    id: ''
   });
 
   const navigate = useNavigate();
@@ -50,7 +51,8 @@ export default function App() {
             setCurrentUser({
               name: data.name,
               email: data.email,
-              loggedIn: true
+              loggedIn: true,
+              id: data._id
             });
             // Перенаправляем на страницу с фильмами
             navigate('/movies');
@@ -71,7 +73,8 @@ export default function App() {
           setCurrentUser({
             name: data.name,
             email: data.email,
-            loggedIn: true
+            loggedIn: true,
+            id: data._id
           });
           // Добавляем авторизационные заголовки
           MainApi._headers['Authorization'] = `Bearer ${jwt}`;
@@ -93,11 +96,12 @@ export default function App() {
     MainApi.updateUserInfo(name, email)
       .then(() => {
         // Изменяем информацию о пользователе
-        setCurrentUser({
+        setCurrentUser(prev => ({
+          ...prev,
           name,
           email,
-          loggedIn: true,
-        });
+          loggedIn: true
+        }));
       })
       .catch(() => {
         // Обрабатываем ошибку
@@ -112,7 +116,8 @@ export default function App() {
     setCurrentUser({
       name: '',
       email: '',
-      loggedIn: false
+      loggedIn: false,
+      id: ''
     });
     // Удаляем авторизационные заголовки
     MainApi._headers['Authorization'] = '';
