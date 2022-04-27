@@ -10,42 +10,61 @@ export default function Movies({ renderOptions }) {
     const [moviesList, setMoviesList] = React.useState([]);
 
     const [searchOptions, setSearchOptions] = React.useState({
-        keyWord: '',
+        keyword: '',
         isShortFilm: false
     });
-
-    const handleSearchQuery = (keyWord, isShortFilm) => {
-        setSearchOptions({ keyWord, isShortFilm });
-        localStorage.setItem('searchOptions', searchOptions);
-    };
 
     // Статус отображение прелоудера
     const [isPreloaderVisible, setIsPreloaderVisible] = React.useState(false);
 
-    // componentDidMount
-    // Добавлена задержка для демонстрации работы прелоудера
-    React.useEffect(() => {
-        // Не показываем старый результат поиска
+    const matchedByKeyword = (movie, keyword) => (movie.nameRU.toLowerCase().includes(keyword.toLowerCase()));
+
+    const matchedByDuration = (movie, isShort) => (isShort ? movie.duration <= 40 : movie.duration > 40);
+
+    const handleSearchQuery = (keyword, isShortFilm) => {
+        setSearchOptions({ keyword, isShortFilm });
+        // Добавляем объект запроса в локальное хранилище
+        localStorage.searchOptions = JSON.stringify({ keyword, isShortFilm });
+        // Убираем данные прошлого поиска
         setMoviesList([]);
-        setIsPreloaderVisible(true)
+        // Получаем, фильтруем и добавляем в хранилище фильмы
+        setIsPreloaderVisible(true);
+        // Добавлена задержка для демонстрации работы прелоудера
         setTimeout(() => {
             MoviesApi.getAllMovies()
-            .then((movies) => {
-                setMoviesList(movies.slice(0, 21));
-            })
-            .catch(() => {
-                console.log('Ошибка при получении всех фильмов');
-            })
-            .finally(() => {
-                setIsPreloaderVisible(false);
-            })
+                .then((movies) => {
+                    const sortedMovies = movies.filter(
+                        movie => (matchedByKeyword(movie, keyword) && matchedByDuration(movie, isShortFilm))
+                    )
+                    // Если поиск пустой - отобразить "Ничего не найдено"
+                    setMoviesList(sortedMovies);
+                    localStorage.moviesList = JSON.stringify(sortedMovies);
+                })
+                .catch(() => {
+                    // Отобразить "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+                    console.log('Ошибка при получении всех фильмов');
+                })
+                .finally(() => {
+                    setIsPreloaderVisible(false);
+                })
         }, 1000);
-    }, []);
+    };
 
+    // Монтирование компонента
     React.useEffect(() => {
-        const searchOptions = localStorage.getItem('searchOptions');
-        if(searchOptions?.keyWord) {
-            
+        // Достаём объёкт запроса и фильмы при загрузке компонента
+        if (!localStorage.searchOptions) {
+            // Пользователь ничего не искал или только зашёл в аккаунт
+            console.log('Пользователь ничего не искал');
+        } else if (!localStorage.moviesList || JSON.parse(localStorage.moviesList).length === 0) {
+            // Ничего не найдено
+            // Отобразить "Ничего не найдено"
+            console.log('Ничего не найдено');
+            setSearchOptions(JSON.parse(localStorage.searchOptions));
+        } else {
+            console.log('Подтягиваем фильмы из хранилища');
+            setSearchOptions(JSON.parse(localStorage.searchOptions));
+            setMoviesList(JSON.parse(localStorage.moviesList));
         }
     }, []);
 
@@ -53,8 +72,9 @@ export default function Movies({ renderOptions }) {
         <section className='movies'>
             <SearchForm
                 onSearch={handleSearchQuery}
+                searchOptions={searchOptions}
             />
-            <Preloader isVisible={isPreloaderVisible}/>
+            <Preloader isVisible={isPreloaderVisible} />
             <MoviesCardList
                 movies={moviesList}
                 searchOptions={searchOptions}

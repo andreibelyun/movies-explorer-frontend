@@ -113,8 +113,7 @@ class MainApi {
 }
 
 export default new MainApi({
-    // baseUrl: 'https://api.saveme.nomoredomains.xyz',
-    baseUrl: 'http://localhost:3001',
+    baseUrl: 'https://api.saveme.nomoredomains.xyz',
     headers: {
         'Content-Type': 'application/json',
     }

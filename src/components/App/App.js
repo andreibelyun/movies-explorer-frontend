@@ -110,8 +110,9 @@ export default function App() {
   };
 
   const onSignout = () => {
-    // Удаляем токен
-    localStorage.removeItem('jwt');
+    // Удаляем токен и данные поиска
+    localStorage.clear();
+
     // Изменяем информацию о пользователе
     setCurrentUser({
       name: '',
