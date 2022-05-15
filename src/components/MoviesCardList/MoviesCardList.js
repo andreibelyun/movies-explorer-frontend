@@ -9,6 +9,8 @@ export default function MoviesCardList({ movies, renderOptions }) {
     
     const [moviesList, setMoviesList] = React.useState(movies.slice(0, renderOptions.initialCardsNumber));
 
+    const [isVisible, setIsVisible] = React.useState(true);
+
     const renderMore = () => {
         // добавляем к карточкам подмассив фильмов
         setMoviesList((prevList) =>
@@ -18,6 +20,7 @@ export default function MoviesCardList({ movies, renderOptions }) {
 
     React.useEffect(() => {
         setShowMore(movies.length > moviesList.length);
+        if (moviesList.length === 0) setIsVisible(false);
     }, [moviesList]);
 
     React.useEffect(() => {
@@ -27,7 +30,7 @@ export default function MoviesCardList({ movies, renderOptions }) {
     const imagesSourse = 'https://api.nomoreparties.co/';
 
     return (
-        <section className='movies-card-list'>
+        <section className={`movies-card-list ${isVisible ? '' : ''}`}>
 
             <div className='movies-card-list__container'>
                 {

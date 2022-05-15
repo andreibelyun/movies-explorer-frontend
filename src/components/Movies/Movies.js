@@ -47,7 +47,7 @@ export default function Movies({ renderOptions }) {
                 .finally(() => {
                     setIsPreloaderVisible(false);
                 })
-        }, 1000);
+        }, 5000);
     };
 
     // Монтирование компонента
