@@ -1,29 +1,37 @@
 import React from 'react';
-
 import './Register.css';
 import logo from '../../images/logo.png';
 import { Link } from 'react-router-dom';
+import { useInput } from '../../utils/validation';
 
 
 export default function Register({ onRegister }) {
 
-    const [user, setUser] = React.useState({
-        name: '',
-        email: '',
-        password: '',
+    const name = useInput('', {
+        required: true,
+        name: true,
+        minLength: 2,
+        maxLength: 30,
     });
 
-    const handleChange = (e) => {
-        setUser((prevData) => ({
-            ...prevData,
-            [e.target.name]: e.target.value
-        }));
-    };
+    const email = useInput('', {
+        required: true,
+        email: true,
+    });
+    
+    const password = useInput('', {
+        required: true,
+        minLength: 3
+    });
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        onRegister(user);
+        onRegister({
+            name: name.value,
+            email: email.value,
+            password: password.value
+        });
     };
 
     return (
@@ -41,11 +49,12 @@ export default function Register({ onRegister }) {
                             id='name-register-input'
                             type='text'
                             name='name'
-                            value={user.name}
-                            onChange={handleChange}
+                            value={name.value}
+                            onChange={name.onChange}
                             required
+                            autoComplete='off'
                         />
-                        <p className='form__input-error' />
+                        { !name.isValid && <p className='form__input-error' >{name.errorText}</p>}
                     </li>
                     <li className='form__section'>
                         <label className='form__input-title' htmlFor='email-register-input'>E-mail</label>
@@ -54,11 +63,12 @@ export default function Register({ onRegister }) {
                             id='email-register-input'
                             type='text'
                             name='email'
-                            value={user.email}
-                            onChange={handleChange}
+                            value={email.value}
+                            onChange={email.onChange}
                             required
+                            autoComplete='off'
                         />
-                        <p className='form__input-error' />
+                        <p className='form__input-error'>{email.errorText}</p>
                     </li>
                     <li className='form__section'>
                         <label className='form__input-title' htmlFor='password-register-input'>Пароль</label>
@@ -67,13 +77,18 @@ export default function Register({ onRegister }) {
                             id='password-register-input'
                             type='password'
                             name='password'
-                            value={user.password}
-                            onChange={handleChange}
+                            value={password.value}
+                            onChange={password.onChange}
                         />
-                        <p className='form__input-error'/>
+                        <p className='form__input-error'>{password.errorText}</p>
                     </li>
                 </ul>
-                <button className='register__enter form__enter interactive-button' type='submit'>Зарегистрироваться</button>
+                <button
+                    className='register__enter form__enter interactive-button'
+                    type='submit'
+                    disabled={ !(name.isValid && email.isValid && password.isValid) }>
+                    Зарегистрироваться
+                </button>
             </form>
             <p className='form__footnote'>
                 Уже зарегистрированы?

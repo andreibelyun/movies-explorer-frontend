@@ -106,10 +106,17 @@
     line-height: 17px;
     text-align: center;
     color: #FFFFFF;
-    margin: 0 0 16px;
+    margin-bottom: 16px;
     padding: 0;
     font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-style: normal;
+}
+
+.form__enter:disabled {
+    background-color: #F8F8F8;
+    color: #C2C2C2;
+    transform: none;
+    cursor: auto;
 }
 
 .form__footnote {
