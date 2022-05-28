@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import validator from 'validator';
 
 const useValidation = (value, validationRules) => {
+
     const [status, setStatus] = useState({
         isValid: true,
         errorText: ''
@@ -14,59 +15,36 @@ const useValidation = (value, validationRules) => {
         })
     };
 
-    const validateOnEmpty = () => {
-        value
-            ? setValid()
-            : setStatus({
-                isValid: false,
-                errorText: 'Поле не может быть пустым'
-            });
+    const setInvalid = (errorText) => {
+        setStatus({
+            isValid: false,
+            errorText
+        })
+    };
 
+    const validate = (isValid, errorText) => {
+        isValid ? setValid() : setInvalid(errorText);
+    };
+
+    const checkOnEmpty = () => {
         return value;
     };
 
-    const validateOnMinLength = (minLength) => {
-        value.length < minLength
-            ? setStatus({
-                isValid: false,
-                errorText: `Минимальное количество символов: ${minLength}`
-            })
-            : setValid();
-
-        return value.length > minLength;
+    const checkOnMinLength = (minLength) => {
+        return value.length >= minLength;
     };
 
-    const validateOnMaxLength = (maxLength) => {
-        value.length > maxLength
-            ? setStatus({
-                isValid: false,
-                errorText: `Максимальное количество символов: ${maxLength}`
-            })
-            : setValid();
-        return value.length < maxLength;
+    const checkOnMaxLength = (maxLength) => {
+        return value.length <= maxLength
     };
 
-    const validateEmail = () => {
-        validator.isEmail(value)
-            ? setValid()
-            : setStatus({
-                isValid: false,
-                errorText: 'Некорректный адрес электронной почты'
-            });
-
+    const checkEmail = () => {
         return validator.isEmail(value);
     };
 
-    const validateName = () => {
+    const checkName = () => {
         // только латиница, кириллица, пробел или дефис
         const nameRegEx = /^[a-zA-Zа-яА-ЯёЁ -]+$/;
-
-        nameRegEx.test(value)
-            ? setValid()
-            : setStatus({
-                isValid: false,
-                errorText: 'Имя может содержать только латиницу, кириллицу, пробел или дефис'
-            });
 
         return nameRegEx.test(value);
     };
@@ -75,25 +53,52 @@ const useValidation = (value, validationRules) => {
         rulesLoop: for (let rule in validationRules) {
             switch (rule) {
                 case 'required':
-                    if (!validateOnEmpty()) break rulesLoop;
+                    validate(
+                        checkOnEmpty(),
+                        'Поле не может быть пустым'
+                    );
+                    if (!checkOnEmpty()) break rulesLoop;
                     break;
                 case 'minLength':
-                    if (!validateOnMinLength(validationRules[rule])) break rulesLoop;
+                    const minLength = validationRules[rule];
+                    validate(
+                        checkOnMinLength(minLength),
+                        `Минимальное количество символов: ${minLength}`
+                    );
+                    if (!checkOnMinLength(minLength)) break rulesLoop;
                     break;
                 case 'maxLength':
-                    if (!validateOnMaxLength(validationRules[rule])) break rulesLoop;
+                    const maxLength = validationRules[rule];
+                    validate(
+                        checkOnMaxLength(maxLength),
+                        `Максимальное количество символов: ${maxLength}`
+                    );
+                    if (!checkOnMaxLength(maxLength)) break rulesLoop;
                     break;
                 case 'email':
-                    if (!validateEmail()) break rulesLoop;
+                    validate(
+                        checkEmail(),
+                        'Некорректный адрес электронной почты'
+                    );
+                    if (!checkEmail()) break rulesLoop;
                     break;
                 case 'name':
-                    if (!validateName()) break rulesLoop;
+                    validate(
+                        checkName(),
+                        'Имя может содержать только латиницу, кириллицу, пробел или дефис'
+                    );
+                    if (!checkName()) break rulesLoop;
                     break;
                 default:
                     setValid();
             }
         }
     }, [value]);
+
+    // при первой загрузке страницы не показываем ошибки - не юзерфрендли
+    useEffect(() => {
+        setValid();
+    }, []);
 
     return {
         isValid: status.isValid,

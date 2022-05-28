@@ -4,7 +4,6 @@ import logo from '../../images/logo.png';
 import { Link } from 'react-router-dom';
 import { useInput } from '../../utils/validation';
 
-
 export default function Register({ onRegister }) {
 
     const name = useInput('', {
@@ -18,10 +17,10 @@ export default function Register({ onRegister }) {
         required: true,
         email: true,
     });
-    
+
     const password = useInput('', {
         required: true,
-        minLength: 3
+        minLength: 3,
     });
 
     const handleSubmit = (e) => {
@@ -33,6 +32,11 @@ export default function Register({ onRegister }) {
             password: password.value
         });
     };
+
+    const isButtonDisabled = !(
+        name.isValid && email.isValid && password.isValid
+        && name.value && email.value && password.value
+    ); // values - для отключения кнопки при первой загрузке страницы (без ошибок)
 
     return (
         <section className='register form'>
@@ -54,7 +58,7 @@ export default function Register({ onRegister }) {
                             required
                             autoComplete='off'
                         />
-                        { !name.isValid && <p className='form__input-error' >{name.errorText}</p>}
+                        <p className='form__input-error' >{name.errorText}</p>
                     </li>
                     <li className='form__section'>
                         <label className='form__input-title' htmlFor='email-register-input'>E-mail</label>
@@ -86,7 +90,7 @@ export default function Register({ onRegister }) {
                 <button
                     className='register__enter form__enter interactive-button'
                     type='submit'
-                    disabled={ !(name.isValid && email.isValid && password.isValid) }>
+                    disabled={isButtonDisabled}>
                     Зарегистрироваться
                 </button>
             </form>

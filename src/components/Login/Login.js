@@ -2,27 +2,33 @@ import React from 'react';
 import './Login.css';
 import logo from '../../images/logo.png';
 import { Link } from 'react-router-dom';
+import { useInput } from '../../utils/validation';
 
 export default function Login({ onLogin }) {
 
-    const [user, setUser] = React.useState({
-        email: '',
-        password: ''
+    const email = useInput('', {
+        required: true,
+        email: true,
     });
 
-    const handleChange = (e) => {
-        setUser((prevData) => ({
-            ...prevData,
-            [e.target.name]: e.target.value
-        }));
-    };
+    const password = useInput('', {
+        required: true,
+        minLength: 3,
+    });
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        onLogin(user);
+        onLogin({
+            email: email.value,
+            password: password.value
+        });
     };
 
+    const isButtonDisabled = !(
+        email.isValid && password.isValid
+        && email.value && password.value
+    ); // values - для отключения кнопки при первой загрузке страницы (без ошибок)
 
     return (
         <section className='login form'>
@@ -39,11 +45,12 @@ export default function Login({ onLogin }) {
                             id='email-login-input'
                             type='text'
                             name='email'
-                            value={user.email}
-                            onChange={handleChange}
+                            value={email.value}
+                            onChange={email.onChange}
                             required
+                            autoComplete='off'
                         />
-                        <p className='form__input-error' />
+                        <p className='form__input-error'>{email.errorText}</p>
                     </li>
                     <li className='form__section'>
                         <label className='form__input-title' htmlFor='password-login-input'>Пароль</label>
@@ -52,14 +59,20 @@ export default function Login({ onLogin }) {
                             id='password-login-input'
                             type='password'
                             name='password'
-                            value={user.password}
-                            onChange={handleChange}
+                            value={password.value}
+                            onChange={password.onChange}
                             required
+                            autoComplete='off'
                         />
-                        <p className='form__input-error' />
+                        <p className='form__input-error'>{password.errorText}</p>
                     </li>
                 </ul>
-                <button className='login__enter form__enter interactive-button' type='submit'>Войти</button>
+                <button
+                    className='login__enter form__enter interactive-button'
+                    type='submit'
+                    disabled={isButtonDisabled}>
+                    Войти
+                </button>
             </form>
             <p className='form__footnote'>
                 Ещё не зарегистрированы?
