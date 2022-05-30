@@ -118,7 +118,8 @@ const useInput = (initialValue, validationRules) => {
         value,
         onChange,
         isValid: validation.isValid,
-        errorText: validation.errorText
+        errorText: validation.errorText,
+        setValue
     };
 };
 

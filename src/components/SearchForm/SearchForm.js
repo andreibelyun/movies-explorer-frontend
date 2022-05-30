@@ -1,30 +1,27 @@
 import React from 'react';
+import { useInput } from '../../utils/validation';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import './SearchForm.css';
 
-export default function SearchForm({ onSearch, searchOptions }) {
-
-    const [searchKeyword, setSearchKeyword] = React.useState('');
+export default function SearchForm({ onSearch, searchOptions, onError }) {
+    
+    const keyword = useInput('', { required: true });
     const [isShort, setIsShort] = React.useState(false);
-
-    const handleChange = (e) => {
-        setSearchKeyword(e.target.value);
-    };
 
     const handleSearch = (e) => {
         e.preventDefault();
-        onSearch(searchKeyword, isShort);
+        if(keyword.isValid) onSearch(keyword.value, isShort);
+        else onError(''); // показать сообщение
     };
 
     const handleCheckboxClick = () => {
-        // Валидировать инпут
         setIsShort(!isShort);
-        // e.target.form.submit();
-        onSearch(searchKeyword, !isShort);
+        if(keyword.isValid) onSearch(keyword.value, !isShort);
+        else onError(''); // показать сообщение
     }
 
     React.useEffect(() => {
-        setSearchKeyword(searchOptions.keyword);
+        keyword.setValue(searchOptions.keyword);
         setIsShort(searchOptions.isShortFilm);
     }, [searchOptions]);
 
@@ -36,10 +33,11 @@ export default function SearchForm({ onSearch, searchOptions }) {
                     type='text'
                     name='keyword'
                     placeholder='Фильм'
-                    onChange={handleChange}
-                    value={searchKeyword}
+                    onChange={keyword.onChange}
+                    value={keyword.value}
                     required
                 />
+                <p></p>
                 <button
                     className='search-form__search interactive-button'
                     type='submit'
