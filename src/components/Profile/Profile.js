@@ -2,38 +2,48 @@ import React from 'react';
 import './Profile.css';
 
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import { useInput } from '../../utils/validation';
 
 export default function Profile({ onEdit, onSignout }) {
 
     const currentUser = React.useContext(CurrentUserContext);
 
-    const [isReadOnly, setIsReadOnly] = React.useState(true);
-
-    const [user, setUser] = React.useState({
-        name: currentUser.name,
-        email: currentUser.email,
+    const name = useInput(currentUser.name, {
+        required: true,
+        minLength: 2,
+        maxLength: 30,
+        name: true,
     });
+
+    const email = useInput(currentUser.email, {
+        required: true,
+        email: true,
+    });
+
+    const [isReadOnly, setIsReadOnly] = React.useState(true);
 
     const changeInputStatus = () => {
         setIsReadOnly(!isReadOnly);
     };
 
-    const handleChange = (e) => {
-        setUser(prevVal => ({
-            ...prevVal,
-            [e.target.name]: e.target.value
-        }));
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        onEdit(user);
+        onEdit({
+            name: name.value,
+            email: email.value
+        });
         changeInputStatus();
     };
 
     const handleSignout = () => {
         onSignout();
     };
+
+    const isButtonDisabled = !(
+        name.isValid && email.isValid
+        && (name.value !== currentUser.name
+            || email.value !== currentUser.email)
+    );
 
     return (
         <section className='profile'>
@@ -48,12 +58,13 @@ export default function Profile({ onEdit, onSignout }) {
                             type='text'
                             placeholder='Имя'
                             name='name'
-                            value={user.name}
-                            onChange={handleChange}
+                            value={name.value}
+                            onChange={name.onChange}
                             readOnly={isReadOnly}
                             required
                         />
                     </li>
+                    <p className='form__input-error profile__input-error' >{name.errorText}</p>
                     <li className='profile__section'>
                         <label className='profile__input-title' htmlFor='email-profile-input'>E-mail</label>
                         <input
@@ -62,18 +73,32 @@ export default function Profile({ onEdit, onSignout }) {
                             type='text'
                             placeholder='Почта'
                             name='email'
-                            value={user.email}
-                            onChange={handleChange}
+                            value={email.value}
+                            onChange={email.onChange}
                             readOnly={isReadOnly}
                             required
                         />
                     </li>
+                    <p className='form__input-error profile__input-error' >{email.errorText}</p>
                 </ul>
             </form>
-            <button onClick={isReadOnly ? changeInputStatus : handleSubmit } className='profile__edit interactive-link' type='button'>
-                {isReadOnly ? 'Редактировать' : 'Сохранить'}
-            </button>
-            <button onClick={handleSignout} className='profile__exit interactive-link' type='button'>Выйти из аккаунта</button>
+            {isReadOnly
+                ?
+                <>
+                    <button onClick={changeInputStatus} className='profile__edit interactive-link' type='button'>Редактировать</button>
+                    <button onClick={handleSignout} className='profile__exit interactive-link' type='button'>Выйти из аккаунта</button>
+                </>
+                :
+                <>
+                    <button
+                        onClick={handleSubmit}
+                        className='profile__save interactive-button'
+                        disabled={isButtonDisabled}
+                    >
+                        Сохранить
+                    </button>
+                </>
+            }
         </section>
     );
 }
