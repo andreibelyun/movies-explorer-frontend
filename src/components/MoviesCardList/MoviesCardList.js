@@ -5,7 +5,7 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 export default function MoviesCardList({ movies, renderOptions, savedMovies, onMovieSave, onMovieDeletion }) {
     // показывать кнопку "Ещё" или нет
     const [showMore, setShowMore] = useState(false);
-    const [moviesList, setMoviesList] = useState(movies.slice(0, renderOptions.initialCardsNumber));
+    const [moviesList, setMoviesList] = useState(movies.slice(0, renderOptions.initialCardsNumber)); 
 
     const renderMore = () => {
         // добавляем к карточкам подмассив фильмов

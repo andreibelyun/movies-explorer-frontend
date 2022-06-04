@@ -2,7 +2,7 @@ import './MoviesCard.css';
 import React from 'react';
 import activeButtonImg from '../../images/save_movie_button_icon.svg';
 import removeButtonImg from '../../images/remove-from-saved-icon.svg';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export default function MoviesCard(props) {
 
@@ -24,7 +24,6 @@ export default function MoviesCard(props) {
     } = props;
 
     const location = useLocation().pathname;
-    const navigate = useNavigate();
 
     // изменяет склонение слова "минут" в зависимости от длительности
     const getDurationText = (duration) => {
@@ -51,16 +50,15 @@ export default function MoviesCard(props) {
             nameEN,
             thumbnail,
             movieId,
+        }, () => {
+            setMovieStatus('saved');
         });
-        setMovieStatus('saved');
     };
 
     const handleDeletion = () => {
-        const id = savedMovies.find((item) => (item.movieId === movieId))._id;
-        console.log('Deletion', id);
-        onDeletion(id);
-        setMovieStatus('not-saved');
-        navigate(location);
+        onDeletion(movieId, () => {
+            setMovieStatus('not-saved');
+        });
     };
 
     // Возможные значения статуса карточки:
@@ -116,7 +114,7 @@ export default function MoviesCard(props) {
     React.useEffect(() => {
         setStatus();
         setButton();
-    }, [props]);
+    }, [props, movieStatus]);
 
     return (
         <article className='movie'>

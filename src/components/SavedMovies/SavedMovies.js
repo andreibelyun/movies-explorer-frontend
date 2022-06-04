@@ -37,8 +37,9 @@ export default function SavedMovies({ renderOptions, savedMovies, onMovieSave, o
     };
 
     useEffect(() => {
+        setSavedMoviesList(savedMovies);
         if (savedMovies.length > 0)
-            setSavedMoviesList(savedMovies);
+            setText('');
         else
             setText('У вас пока нет сохранённых фильмов');
     }, [savedMovies]);

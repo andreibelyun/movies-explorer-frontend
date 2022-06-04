@@ -30,6 +30,16 @@ export default function App() {
     MainApi._headers['Authorization'] = value;
   };
 
+  const loadSavedMovies = () => {
+    MainApi.getSavedMovies()
+      .then((movies) => {
+        setSavedMovies(movies.reverse());
+      })
+      .catch(() => {
+        console.error('Ошибка при получении сохранённых фильмов');
+      });
+  };
+
   const onLogin = ({ email, password }) => {
     return MainApi.login(email, password)
       .then((data) => {
@@ -44,6 +54,7 @@ export default function App() {
               loggedIn: true,
               id: data._id
             });
+            loadSavedMovies();
             // Перенаправляем на страницу с фильмами
             navigate('/movies');
           });
@@ -69,13 +80,7 @@ export default function App() {
             id: data._id
           });
           setAuthorizationHeaders(`Bearer ${jwt}`);
-          MainApi.getSavedMovies()
-            .then((movies) => {
-              setSavedMovies(movies.reverse());
-            })
-            .catch(() => {
-              console.error('Ошибка при получении сохранённых фильмов');
-            });
+          loadSavedMovies();
           // Перенаправляем на текущую страницу
           navigate(location.pathname);
         })
@@ -114,23 +119,31 @@ export default function App() {
     setAuthorizationHeaders('');
   };
 
-  const onMovieSave = (movie) => {
+  const onMovieSave = (movie, callback) => {
     MainApi.saveMovie(movie)
       .then(() => {
         setSavedMovies(savedMovies => [movie, ...savedMovies]);
+        callback();
       })
       .catch(() => {
         console.error('Ошибка при сохранении фильма');
       });
   };
 
-  const onMovieDeletion = (movieId) => {
-    MainApi.deleteMovieFromSaved(movieId)
+  const onMovieDeletion = (movieId, callback) => {
+    MainApi.getSavedMovies()
+      .then((movies) => {
+        const id = movies.find(item => (item.movieId === movieId))._id;
+        return MainApi.deleteMovieFromSaved(id);
+      })
       .then(() => {
-        setSavedMovies(savedMovies => (savedMovies.filter(item => (item.movieId === movieId))));
+        setSavedMovies(savedMovies =>
+          (savedMovies.filter(item => !(item.movieId === movieId)))
+        );
+        callback();
       })
       .catch(() => {
-        console.log('Ошибка при отмене сохранения фильма');
+        console.error('Ошибка при отмене сохранения фильма');
       });
   };
 
@@ -181,6 +194,18 @@ export default function App() {
     });
   }, []);
 
+  const [savedRenderOptions, setSavedRenderOptions] = useState({
+    initialCardsNumber: savedMovies.length,
+    chunkSize: 1
+  });
+
+  useEffect(() => {
+    setSavedRenderOptions({
+      initialCardsNumber: savedMovies.length,
+      chunkSize: 1
+    })
+  }, [savedMovies]);
+
   return (
     <div className="app">
       <CurrentUserContext.Provider value={currentUser}>
@@ -201,7 +226,7 @@ export default function App() {
           <Route path='/saved-movies' element={
             <PrivateRoute>
               <SavedMovies
-                renderOptions={renderOptions}
+                renderOptions={savedRenderOptions}
                 savedMovies={savedMovies}
                 onMovieSave={onMovieSave}
                 onMovieDeletion={onMovieDeletion}
