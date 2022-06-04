@@ -1,3 +1,3 @@
 # movies-explorer-frontend
 
-Ссылка на проект: https://saveme.nomoredomains.xyz/movies
+Ссылка на проект: https://saveme.nomoredomains.xyz
