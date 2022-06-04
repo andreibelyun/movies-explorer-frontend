@@ -1,3 +1,5 @@
+@import url('../Login/Login.css');
+
 .profile {
     max-width: 410px;
     margin: 0 auto;
@@ -65,6 +67,11 @@
     border: none;
     margin: 0;
     padding: 0;
+    width: 90%;
+}
+
+.profile__input-error {
+    text-align: center;
 }
 
 .profile__edit {
@@ -99,9 +106,24 @@
     margin-top: 16px;
 }
 
+.profile__save {
+    margin-top: 223px;
+}
+
+.profile__save:disabled {
+    background-color: #F8F8F8;
+    color: #C2C2C2;
+    transform: none;
+    cursor: auto;
+}
+
 @media screen and (max-width: 768px) {
     .profile {
         padding: 236px 0 269px;
+    }
+
+    .profile__input {
+        width: 80%;
     }
 
     .profile__title {
@@ -136,5 +158,15 @@
     .profile__exit {
         font-size: 12px;
         line-height: 15px;
+    }
+
+    .profile__save {
+        text-align: center;
+        width: 100%;
+        margin-top: 380px;
+    }
+
+    .form__enter {
+        max-width: 260px;
     }
 }

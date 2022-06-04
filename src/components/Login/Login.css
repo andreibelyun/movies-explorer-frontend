@@ -95,6 +95,20 @@
     margin-top: 10px;
 }
 
+.form__error {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    text-align: center;
+    color: #FF004C;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
 .form__enter {
     width: 396px;
     height: 45px;
@@ -106,10 +120,17 @@
     line-height: 17px;
     text-align: center;
     color: #FFFFFF;
-    margin: 0 0 16px;
+    margin-bottom: 16px;
     padding: 0;
     font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-style: normal;
+}
+
+.form__enter:disabled {
+    background-color: #F8F8F8;
+    color: #C2C2C2;
+    transform: none;
+    cursor: auto;
 }
 
 .form__footnote {

@@ -3,3 +3,19 @@
     flex-direction: column;
     justify-content: center;
 }
+
+.movies__text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+    color: #A0A0A0;
+    margin: 0;
+    padding: 0 5vw;
+    min-height: calc(100vh - 74px - 242px - 172px);
+    padding-top: 15vh;
+    padding-bottom: 5vh;
+    box-sizing: border-box;
+}
