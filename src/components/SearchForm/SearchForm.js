@@ -1,26 +1,26 @@
-import React from 'react';
+import './SearchForm.css';
+import { useState, useEffect } from 'react';
 import { useInput } from '../../utils/validation';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
-import './SearchForm.css';
 
-export default function SearchForm({ onSearch, searchOptions, onError }) {
-    
-    const keyword = useInput('', { required: true });
-    const [isShort, setIsShort] = React.useState(false);
+export default function SearchForm({ onSearch, onKeywordMissing, searchOptions }) {
+
+    const keyword = useInput('', { required: true }); // на случай, если будет необходимо добавить правила валидации
+    const [isShort, setIsShort] = useState(false);
 
     const handleSearch = (e) => {
         e.preventDefault();
-        if(keyword.isValid) onSearch(keyword.value, isShort);
-        else onError(''); // показать сообщение
+        if (keyword.isValid && keyword.value.length > 0) onSearch(keyword.value, isShort);
+        else onKeywordMissing();
     };
 
     const handleCheckboxClick = () => {
         setIsShort(!isShort);
-        if(keyword.isValid) onSearch(keyword.value, !isShort);
-        else onError(''); // показать сообщение
+        if (keyword.isValid && keyword.value.length > 0) onSearch(keyword.value, !isShort);
+        else onKeywordMissing();
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         keyword.setValue(searchOptions.keyword);
         setIsShort(searchOptions.isShortFilm);
     }, [searchOptions]);
@@ -35,7 +35,6 @@ export default function SearchForm({ onSearch, searchOptions, onError }) {
                     placeholder='Фильм'
                     onChange={keyword.onChange}
                     value={keyword.value}
-                    required
                 />
                 <p></p>
                 <button

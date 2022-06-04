@@ -1,11 +1,10 @@
-import React from 'react';
 import './Register.css';
 import logo from '../../images/logo.png';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useInput } from '../../utils/validation';
 
 export default function Register({ onRegister }) {
-
     const name = useInput('', {
         required: true,
         name: true,
@@ -23,6 +22,19 @@ export default function Register({ onRegister }) {
         minLength: 3,
     });
 
+    const [registerError, setRegisterError] = useState('');
+
+    const isRegisterError = registerError.length > 0;
+
+    const handleError = (err) => {
+        if (err.status === 409)
+            setRegisterError('Пользователь с таким email уже существует.');
+        else if (err.status === 500)
+            setRegisterError('На сервере произошла ошибка.');
+        else
+            setRegisterError('При регистрации произошла ошибка. Попробуйте ещё раз.');
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -30,12 +42,19 @@ export default function Register({ onRegister }) {
             name: name.value,
             email: email.value,
             password: password.value
-        });
+        })
+            .catch((err) => {
+                handleError(err);
+                setTimeout(() => {
+                    setRegisterError('');
+                }, 4000);
+            });
     };
 
-    const isButtonDisabled = !(
-        name.isValid && email.isValid && password.isValid
-        && name.value && email.value && password.value
+    const isButtonDisabled = (
+        isRegisterError ||
+        !(name.isValid && email.isValid && password.isValid
+            && name.value && email.value && password.value)
     ); // values - для отключения кнопки при первой загрузке страницы (без ошибок)
 
     return (
@@ -87,12 +106,15 @@ export default function Register({ onRegister }) {
                         <p className='form__input-error'>{password.errorText}</p>
                     </li>
                 </ul>
-                <button
-                    className='register__enter form__enter interactive-button'
-                    type='submit'
-                    disabled={isButtonDisabled}>
-                    Зарегистрироваться
-                </button>
+                <div className='register__enter'>
+                    {isRegisterError ? <p className='form__error'>{registerError}</p> : ''}
+                    <button
+                        className='form__enter interactive-button'
+                        type='submit'
+                        disabled={isButtonDisabled}>
+                        Зарегистрироваться
+                    </button>
+                </div>
             </form>
             <p className='form__footnote'>
                 Уже зарегистрированы?

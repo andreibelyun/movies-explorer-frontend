@@ -6,5 +6,5 @@ export default function PrivateRoute({ children }) {
 
     const currentUser = React.useContext(CurrentUserContext);
 
-    return (currentUser.loggedIn ? children : <Navigate to='/signin' />);
+    return (currentUser.loggedIn ? children : <Navigate to='/' />);
 };

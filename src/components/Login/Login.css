@@ -95,6 +95,20 @@
     margin-top: 10px;
 }
 
+.form__error {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    text-align: center;
+    color: #FF004C;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
 .form__enter {
     width: 396px;
     height: 45px;

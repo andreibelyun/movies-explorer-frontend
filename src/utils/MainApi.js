@@ -8,7 +8,7 @@ class MainApi {
         if (res.ok) {
             return res.json();
         } else {
-            throw new Error(`Response is not ok with status ${res.status}`);
+            return Promise.reject({ status: res.status });
         }
     }
 

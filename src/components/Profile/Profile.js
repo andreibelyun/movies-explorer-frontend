@@ -1,12 +1,11 @@
-import React from 'react';
 import './Profile.css';
-
+import { useState, useContext } from 'react';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { useInput } from '../../utils/validation';
 
 export default function Profile({ onEdit, onSignout }) {
 
-    const currentUser = React.useContext(CurrentUserContext);
+    const currentUser = useContext(CurrentUserContext);
 
     const name = useInput(currentUser.name, {
         required: true,
@@ -20,7 +19,11 @@ export default function Profile({ onEdit, onSignout }) {
         email: true,
     });
 
-    const [isReadOnly, setIsReadOnly] = React.useState(true);
+    const [profileError, setProfileError] = useState('');
+
+    const isProfileError = profileError.length > 0;
+
+    const [isReadOnly, setIsReadOnly] = useState(true);
 
     const changeInputStatus = () => {
         setIsReadOnly(!isReadOnly);
@@ -31,18 +34,38 @@ export default function Profile({ onEdit, onSignout }) {
         onEdit({
             name: name.value,
             email: email.value
-        });
-        changeInputStatus();
+        })
+            .then(() => {
+                changeInputStatus();
+            })
+            .catch((err) => {
+                handleError(err);
+                setTimeout(() => {
+                    setProfileError('');
+                    name.setValue(currentUser.name);
+                    email.setValue(currentUser.email);
+                }, 4000);
+            });
     };
 
     const handleSignout = () => {
         onSignout();
     };
 
-    const isButtonDisabled = !(
-        name.isValid && email.isValid
-        && (name.value !== currentUser.name
-            || email.value !== currentUser.email)
+    const handleError = (err) => {
+        if (err.status === 409)
+            setProfileError(' Пользователь с таким email уже существует.');
+        else if (err.status === 500)
+            setProfileError('На сервере произошла ошибка.');
+        else
+            setProfileError('При обновлении профиля произошла ошибка. Попробуйте ещё раз.');
+    };
+
+    const isButtonDisabled = (
+        isProfileError ||
+        !(name.isValid && email.isValid
+            && (name.value !== currentUser.name
+                || email.value !== currentUser.email))
     );
 
     return (
@@ -89,15 +112,16 @@ export default function Profile({ onEdit, onSignout }) {
                     <button onClick={handleSignout} className='profile__exit interactive-link' type='button'>Выйти из аккаунта</button>
                 </>
                 :
-                <>
+                <div className='profile__save'>
+                    {isProfileError ? <p className='form__error'>{profileError}</p> : ''}
                     <button
                         onClick={handleSubmit}
-                        className='profile__save interactive-button'
+                        className='form__enter interactive-button'
                         disabled={isButtonDisabled}
                     >
                         Сохранить
                     </button>
-                </>
+                </div>
             }
         </section>
     );

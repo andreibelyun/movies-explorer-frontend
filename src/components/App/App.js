@@ -1,6 +1,6 @@
-import React from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
+import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
 import Header from '../Header/Header';
@@ -16,35 +16,25 @@ import MainApi from '../../utils/MainApi';
 
 export default function App() {
 
-  const [currentUser, setCurrentUser] = React.useState({
+  const [currentUser, setCurrentUser] = useState({
     name: '',
     email: '',
     loggedIn: false,
     id: ''
   });
-
+  const [savedMovies, setSavedMovies] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Регистрация, авторизация, проверка токена
-  const onRegister = ({ name, email, password }) => {
-    MainApi.register(name, email, password)
-      .then(() => {
-        navigate('/signin');
-      })
-      .catch(() => {
-        // Обрабатываем ошибку
-        console.log('Ошибка при регистрации');
-      });
+  const setAuthorizationHeaders = (value) => {
+    MainApi._headers['Authorization'] = value;
   };
 
   const onLogin = ({ email, password }) => {
-    MainApi.login(email, password)
+    return MainApi.login(email, password)
       .then((data) => {
-        // Добавляем токен в localStorage
         localStorage.setItem('jwt', data.token);
-        // Добавляем авторизационные заголовки
-        MainApi._headers['Authorization'] = `Bearer ${data.token}`;
+        setAuthorizationHeaders(`Bearer ${data.token}`);
         // Обновляем информацию о пользователе
         MainApi.getUserInfo(data.token)
           .then((data) => {
@@ -56,11 +46,14 @@ export default function App() {
             });
             // Перенаправляем на страницу с фильмами
             navigate('/movies');
-          })
-      })
-      .catch(() => {
-        // Обрабатываем ошибку
-        console.log('Ошибка при входе');
+          });
+      });
+  };
+
+  const onRegister = ({ name, email, password }) => {
+    return MainApi.register(name, email, password)
+      .then(() => {
+        onLogin({ email, password });
       });
   };
 
@@ -69,50 +62,46 @@ export default function App() {
     if (jwt) {
       MainApi.checkToken(jwt)
         .then((data) => {
-          // Обновляем информацию о пользователе
           setCurrentUser({
             name: data.name,
             email: data.email,
             loggedIn: true,
             id: data._id
           });
-          // Добавляем авторизационные заголовки
-          MainApi._headers['Authorization'] = `Bearer ${jwt}`;
+          setAuthorizationHeaders(`Bearer ${jwt}`);
+          MainApi.getSavedMovies()
+            .then((movies) => {
+              setSavedMovies(movies.reverse());
+            })
+            .catch(() => {
+              console.error('Ошибка при получении сохранённых фильмов');
+            });
           // Перенаправляем на текущую страницу
           navigate(location.pathname);
         })
         .catch(() => {
-          // Обрабатываем ошибку
-          console.log('Ошибка при проверке токена');
+          console.error('Ошибка при проверке токена');
           // Удаляем невалидный токен
           localStorage.removeItem('jwt');
         });
     }
   };
 
-  // Редактирование профиля и выход
   const onEditProfile = ({ name, email }) => {
-    // Запрос в базу на обновление информации
-    MainApi.updateUserInfo(name, email)
+    return MainApi.updateUserInfo(name, email)
       .then(() => {
-        // Изменяем информацию о пользователе
         setCurrentUser(prev => ({
           ...prev,
           name,
           email,
           loggedIn: true
         }));
-      })
-      .catch(() => {
-        // Обрабатываем ошибку
-        console.log('Ошибка при обновлении профиля');
       });
   };
 
   const onSignout = () => {
     // Удаляем токен и данные поиска
     localStorage.clear();
-
     // Изменяем информацию о пользователе
     setCurrentUser({
       name: '',
@@ -120,17 +109,36 @@ export default function App() {
       loggedIn: false,
       id: ''
     });
+    setSavedMovies([]);
     // Удаляем авторизационные заголовки
-    MainApi._headers['Authorization'] = '';
+    setAuthorizationHeaders('');
   };
 
-  // При монтировании App
-  React.useEffect(() => {
+  const onMovieSave = (movie) => {
+    MainApi.saveMovie(movie)
+      .then(() => {
+        setSavedMovies(savedMovies => [movie, ...savedMovies]);
+      })
+      .catch(() => {
+        console.error('Ошибка при сохранении фильма');
+      });
+  };
+
+  const onMovieDeletion = (movieId) => {
+    MainApi.deleteMovieFromSaved(movieId)
+      .then(() => {
+        setSavedMovies(savedMovies => (savedMovies.filter(item => (item.movieId === movieId))));
+      })
+      .catch(() => {
+        console.log('Ошибка при отмене сохранения фильма');
+      });
+  };
+
+  useEffect(() => {
     handleTokenCheck();
   }, []);
 
-  // Рендер карточек в зависимости от ширины экрана
-  const [renderOptions, setRenderOptions] = React.useState({
+  const [renderOptions, setRenderOptions] = useState({
     initialCardsNumber: 12,
     chunkSize: 3
   });
@@ -162,8 +170,7 @@ export default function App() {
   // Задержка выполнения функции onResize
   let resizeTimeout;
 
-  // При монтировании App
-  React.useEffect(() => {
+  useEffect(() => {
     // при первой загрузке страницы
     window.addEventListener('load', onResize);
     // при изменении ширины экрана
@@ -184,11 +191,21 @@ export default function App() {
           <Route path='/signin' element={<Login onLogin={onLogin} />} />
           <Route path='/movies' element={
             <PrivateRoute>
-              <Movies renderOptions={renderOptions} />
+              <Movies
+                renderOptions={renderOptions}
+                savedMovies={savedMovies}
+                onMovieSave={onMovieSave}
+                onMovieDeletion={onMovieDeletion}
+              />
             </PrivateRoute>} />
           <Route path='/saved-movies' element={
             <PrivateRoute>
-              <SavedMovies renderOptions={renderOptions} />
+              <SavedMovies
+                renderOptions={renderOptions}
+                savedMovies={savedMovies}
+                onMovieSave={onMovieSave}
+                onMovieDeletion={onMovieDeletion}
+              />
             </PrivateRoute>} />
           <Route path='/profile' element={
             <PrivateRoute>

@@ -1,11 +1,10 @@
-import React from 'react';
 import './Login.css';
 import logo from '../../images/logo.png';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useInput } from '../../utils/validation';
 
 export default function Login({ onLogin }) {
-
     const email = useInput('', {
         required: true,
         email: true,
@@ -16,18 +15,38 @@ export default function Login({ onLogin }) {
         minLength: 3,
     });
 
+    const [loginError, setLoginError] = useState('');
+
+    const isLoginError = loginError.length > 0;
+
+    const handleError = (err) => {
+        if (err.status === 401)
+            setLoginError('Вы ввели неправильный логин или пароль.');
+        else if (err.status === 500)
+            setLoginError('На сервере произошла ошибка.');
+        else
+            setLoginError('При авторизации произошла ошибка. Попробуйте ещё раз.');
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         onLogin({
             email: email.value,
             password: password.value
-        });
+        })
+            .catch((err) => {
+                handleError(err);
+                setTimeout(() => {
+                    setLoginError('');
+                }, 4000);
+            });
     };
 
-    const isButtonDisabled = !(
-        email.isValid && password.isValid
-        && email.value && password.value
+    const isButtonDisabled = (
+        isLoginError ||
+        !(email.isValid && password.isValid
+            && email.value && password.value)
     ); // values - для отключения кнопки при первой загрузке страницы (без ошибок)
 
     return (
@@ -67,12 +86,15 @@ export default function Login({ onLogin }) {
                         <p className='form__input-error'>{password.errorText}</p>
                     </li>
                 </ul>
-                <button
-                    className='login__enter form__enter interactive-button'
-                    type='submit'
-                    disabled={isButtonDisabled}>
-                    Войти
-                </button>
+                <div className='login__enter'>
+                    {isLoginError ? <p className='form__error'>{loginError}</p> : ''}
+                    <button
+                        className='form__enter interactive-button'
+                        type='submit'
+                        disabled={isButtonDisabled}>
+                        Войти
+                    </button>
+                </div>
             </form>
             <p className='form__footnote'>
                 Ещё не зарегистрированы?

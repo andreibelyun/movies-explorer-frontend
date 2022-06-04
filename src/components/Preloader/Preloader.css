@@ -48,7 +48,7 @@
     z-index: 10;
     padding: 20px;
     box-sizing: border-box;
-    min-height: calc(100vh - 74px - 130px - 242px - 172px);
+    min-height: calc(100vh - 74px - 242px - 172px);
 }
 
 .preloader_hidden {
