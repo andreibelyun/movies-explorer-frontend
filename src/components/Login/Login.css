@@ -1,9 +1,13 @@
 .form {
     max-width: 396px;
+    height: 100vh;
     margin: 0 auto;
     padding: 70px 0;
     font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-style: normal;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
 }
 
 .form__logo {
@@ -25,12 +29,18 @@
     padding: 0;
     font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-style: normal;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .form__sections {
+    width: 100%;
     list-style: none;
     margin: 0;
     padding: 0;
+    flex: 1 1 auto;
 }
 
 .form__section {
@@ -95,6 +105,20 @@
     margin-top: 10px;
 }
 
+.form__error {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    text-align: center;
+    color: #FF004C;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
 .form__enter {
     width: 396px;
     height: 45px;
@@ -106,10 +130,17 @@
     line-height: 17px;
     text-align: center;
     color: #FFFFFF;
-    margin: 0 0 16px;
+    margin-bottom: 16px;
     padding: 0;
     font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-style: normal;
+}
+
+.form__enter:disabled {
+    background-color: #F8F8F8;
+    color: #C2C2C2;
+    transform: none;
+    cursor: auto;
 }
 
 .form__footnote {
@@ -134,13 +165,9 @@
     margin-left: 6px;
 }
 
-.login__enter {
-    margin-top: 169px;
-}
-
 @media screen and (max-width: 768px) {
     .form {
-        padding: 232px 0;
+        padding-top: 23vh;
     }
 }
 
@@ -149,8 +176,6 @@
         box-sizing: border-box;
         width: 100%;
         padding: 56px 30px 30px;
-        display: flex;
-        flex-direction: column;
         align-items: center;
     }
 
@@ -169,11 +194,8 @@
     }
 
     .form__enter {
-        width: 100%;
         font-size: 12px;
         line-height: 15px;
-        margin-bottom: 14px;
-        margin-top: 169px;
     }
 
     .form__footnote {
@@ -185,9 +207,5 @@
         font-size: 12px;
         line-height: 15px;
         margin-left: 7px;
-    }
-
-    .login__enter {
-        margin-top: 257px;
     }
 }

@@ -1,11 +1,1 @@
 @import url('../Login/Login.css');
-
-.register__enter {
-    margin-top: 69px;
-}
-
-@media screen and (max-width: 320px) {
-    .register__enter {
-        margin-top: 157px;
-    }
-}
